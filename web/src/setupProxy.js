@@ -3,8 +3,9 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function(app) {
   app.use(
-    createProxyMiddleware('/api', {
-      target: 'https://api.github.com',
+    createProxyMiddleware('/webapi.htm', {
+      // target: 'http://10.224.148.145:8080',
+      target: 'http://10.215.131.92:8080',
       changeOrigin: true,
       ws: true,
     })

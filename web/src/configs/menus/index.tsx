@@ -16,6 +16,13 @@ const menus: Route[] = [
     path: '/issue',
     name: '分发查询',
     icon: <NodeExpandOutlined />,
+    hideChildrenInMenu: true,
+    children: [
+      {
+        path: '/:id',
+        name: '消费组详情',
+      },
+    ],
   },
   {
     name: '配置管理',

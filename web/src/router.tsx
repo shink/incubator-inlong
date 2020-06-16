@@ -1,5 +1,10 @@
 import React, { Suspense, lazy, useState } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom';
 import { PageLoading } from '@ant-design/pro-layout';
 import { hot } from 'react-hot-loader/root';
 import { Layout } from '@/components';
@@ -31,6 +36,11 @@ const App = () => {
                 />
               ))}
             </Switch>
+            <Route
+              exact
+              path="/"
+              render={() => <Redirect to="/issue" push />}
+            />
           </Suspense>
         </Layout>
       </Router>

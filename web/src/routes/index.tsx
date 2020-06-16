@@ -2,9 +2,12 @@ import { RouteProps } from '@/typings';
 
 const routes: RouteProps[] = [
   {
+    path: '/issue/:id',
+    component: () => import('@/pages/Issue/consumeGroupDetail'),
+  },
+  {
     path: '/issue',
     component: () => import('@/pages/Issue'),
-    exact: true,
   },
   {
     path: '/hello',
