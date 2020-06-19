@@ -6,6 +6,7 @@ export interface GlobalContextProps {
   setCluster?: Function;
   breadMap?: BreadcrumbProps['breadcrumbMap'];
   setBreadMap?: Function;
+  userInfo?: any;
 }
 
 export default React.createContext<GlobalContextProps>({});

@@ -14,10 +14,13 @@ import GlobalContext from '@/context/globalContext';
 const App = () => {
   const [cluster, setCluster] = useState();
   const [breadMap, setBreadMap] = useState();
+  const [userInfo, setUserInfo] = useState({
+    userName: 'webapi',
+  });
 
   return (
     <GlobalContext.Provider
-      value={{ cluster, setCluster, breadMap, setBreadMap }}
+      value={{ cluster, setCluster, breadMap, setBreadMap, userInfo }}
     >
       <Router>
         <Layout>

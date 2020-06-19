@@ -21,6 +21,7 @@ interface ComProps extends TableProps<any> {
   defaultSearchKey?: string;
   isTruePagination?: boolean;
   showSearch?: boolean;
+  searchWidth?: number;
 }
 
 const Comp = (props: ComProps) => {
@@ -32,6 +33,7 @@ const Comp = (props: ComProps) => {
     defaultSearchKey,
     isTruePagination,
     showSearch = true,
+    searchWidth = 8,
   } = props;
   const [filterKey, setFilterKey] = useState(defaultSearchKey);
   // 自动增加排序
@@ -83,7 +85,7 @@ const Comp = (props: ComProps) => {
     <>
       {showSearch && filterFnX && (
         <Row gutter={20} className="mb10">
-          <Col span={8}>
+          <Col span={searchWidth} style={{ padding: 0 }}>
             <Tooltip title={filterKey}>
               <Search
                 value={filterKey}

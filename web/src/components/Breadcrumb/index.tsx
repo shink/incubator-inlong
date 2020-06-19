@@ -19,7 +19,7 @@ const BasicLayout: React.FC<BreadcrumbProps> = props => {
     const breadcrumbNameMap = {} as any;
     breadcrumbMap &&
       breadcrumbMap.forEach((t: MenuDataItem) => {
-        breadcrumbNameMap[t.pro_layout_parentKeys.join('/') + t.key] = t.name;
+        breadcrumbNameMap[t.key as string] = t.name;
       });
     const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
     if (appendParams && index === pathSnippets.length - 1) {

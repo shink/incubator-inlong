@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import GlobalContext from '@/context/globalContext';
 import Breadcrumb from '@/components/Breadcrumb';
 import Table from '@/components/Tablex';
+import tableFilterHelper from '@/components/Tablex/tableFilterHelper';
 import { Form, Input, Button, Spin } from 'antd';
 import { useImmer } from 'use-immer';
 import './index.less';
@@ -43,6 +44,7 @@ const ConsumeGroupDetail: React.FC = () => {
   const { breadMap } = useContext(GlobalContext);
   const [form] = Form.useForm();
   const [formValues, updateFormValues] = useImmer<any>({});
+  const [filterData, updateFilterData] = useImmer<any>({});
   const { data, loading, run } = useRequest<any, ConsumeGroupData>(
     () =>
       queryUser({
@@ -86,6 +88,20 @@ const ConsumeGroupDetail: React.FC = () => {
           columns={columns}
           dataSource={data?.list}
           rowKey="brokerAddr"
+          searchPlaceholder="请输入 broker地址/分区ID 搜索"
+          dataSourceX={filterData.list}
+          filterFnX={value =>
+            tableFilterHelper({
+              key: value,
+              srcArray: data?.list,
+              targetArray: filterData.list,
+              updateFunction: res =>
+                updateFilterData(filterData => {
+                  filterData.list = res;
+                }),
+              filterList: ['brokerAddr', 'partId'],
+            })
+          }
         ></Table>
       </div>
     </Spin>

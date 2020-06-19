@@ -28,13 +28,14 @@ const menus: Route[] = [
     name: '配置管理',
     key: '/other',
     icon: <SettingOutlined />,
+    path: '/other',
     children: [
       {
-        path: '/hello',
+        path: '/broker',
         name: 'Broker列表',
       },
       {
-        path: '/user',
+        path: '/topic',
         name: 'topic列表',
       },
     ],

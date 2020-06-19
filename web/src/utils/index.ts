@@ -27,3 +27,15 @@ export const isEmptyParam = (value: any): boolean => {
   // value为默认值
   return !value;
 };
+
+export const boolean2Chinese = (value: boolean | string): string => {
+  let v = false;
+  if (value === 'false') {
+    v = false;
+  } else if (value === 'true') {
+    v = true;
+  } else {
+    v = value as boolean;
+  }
+  return v === false ? '否' : '是';
+};
