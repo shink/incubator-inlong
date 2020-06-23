@@ -5,7 +5,7 @@ import { Table, Input, Row, Button, Col, Tooltip } from 'antd';
 import * as React from 'react';
 import { TableProps } from 'antd/lib/table';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
-import { isEmptyParam } from '../../utils';
+import { isEmptyParam } from '@/utils';
 import { useEffect } from 'react';
 import './index.less';
 
@@ -22,6 +22,7 @@ interface ComProps extends TableProps<any> {
   isTruePagination?: boolean;
   showSearch?: boolean;
   searchWidth?: number;
+  searchStyle?: any;
 }
 
 const Comp = (props: ComProps) => {
@@ -34,6 +35,7 @@ const Comp = (props: ComProps) => {
     isTruePagination,
     showSearch = true,
     searchWidth = 8,
+    searchStyle = {}
   } = props;
   const [filterKey, setFilterKey] = useState(defaultSearchKey);
   // 自动增加排序
@@ -62,7 +64,7 @@ const Comp = (props: ComProps) => {
 
     setFilterKey(defaultSearchKey || '');
     filterFnX && filterFnX(defaultSearchKey || '');
-  }, [defaultSearchKey]);
+  }, [defaultSearchKey, filterFnX]);
   // 分页如果只有一页，自动隐藏
   opts.pagination = Object.assign(
     {
@@ -84,8 +86,8 @@ const Comp = (props: ComProps) => {
   return (
     <>
       {showSearch && filterFnX && (
-        <Row gutter={20} className="mb10">
-          <Col span={searchWidth} style={{ padding: 0 }}>
+        <Row gutter={20} className="mb10" style={{position: 'relative'}}>
+          <Col span={searchWidth} style={{ padding: 0, ...searchStyle }}>
             <Tooltip title={filterKey}>
               <Search
                 value={filterKey}

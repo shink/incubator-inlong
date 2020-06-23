@@ -10,6 +10,10 @@ const routes: RouteProps[] = [
     component: () => import('@/pages/Issue'),
   },
   {
+    path: '/broker/:id',
+    component: () => import('@/pages/Broker/brokerDetail'),
+  },
+  {
     path: '/broker',
     component: () => import('@/pages/Broker'),
   },

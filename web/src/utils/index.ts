@@ -1,10 +1,7 @@
 import { isObject, isEmpty } from 'lodash';
 
 export const isDevelopEnv = () => {
-  if (process.env.NODE_ENV === 'development') {
-    return true;
-  }
-  return false;
+  return process.env.NODE_ENV === 'development'
 };
 
 export const isEmptyParam = (value: any): boolean => {
@@ -29,7 +26,7 @@ export const isEmptyParam = (value: any): boolean => {
 };
 
 export const boolean2Chinese = (value: boolean | string): string => {
-  let v = false;
+  let v: boolean;
   if (value === 'false') {
     v = false;
   } else if (value === 'true') {
@@ -37,5 +34,9 @@ export const boolean2Chinese = (value: boolean | string): string => {
   } else {
     v = value as boolean;
   }
-  return v === false ? '否' : '是';
+  return !v ? '否' : '是';
 };
+
+export const transParamsWithConstantsMap = (map: any, paramsName: string): string => {
+  return map[paramsName] || paramsName;
+}

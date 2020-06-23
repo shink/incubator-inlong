@@ -14,7 +14,7 @@ import './index.less';
 import GlobalContext from '@/context/globalContext';
 
 const BasicLayout: React.FC = props => {
-  const { cluster, setCluster, setBreadMap } = useContext(GlobalContext);
+  const { cluster, setBreadMap } = useContext(GlobalContext);
   const location = useLocation();
   const [settings, setSetting] = useState<SettingDrawerProps['settings']>(
     initSetting as SettingDrawerProps['settings']

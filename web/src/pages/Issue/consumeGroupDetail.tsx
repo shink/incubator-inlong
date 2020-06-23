@@ -3,7 +3,7 @@ import GlobalContext from '@/context/globalContext';
 import Breadcrumb from '@/components/Breadcrumb';
 import Table from '@/components/Tablex';
 import tableFilterHelper from '@/components/Tablex/tableFilterHelper';
-import { Form, Input, Button, Spin } from 'antd';
+import { Spin } from 'antd';
 import { useImmer } from 'use-immer';
 import './index.less';
 import { useRequest } from '@/hooks';
@@ -42,10 +42,8 @@ const queryUser = (data: ConsumeGroupQueryData) => ({
 const ConsumeGroupDetail: React.FC = () => {
   const { id } = useParams();
   const { breadMap } = useContext(GlobalContext);
-  const [form] = Form.useForm();
-  const [formValues, updateFormValues] = useImmer<any>({});
   const [filterData, updateFilterData] = useImmer<any>({});
-  const { data, loading, run } = useRequest<any, ConsumeGroupData>(
+  const { data, loading } = useRequest<any, ConsumeGroupData>(
     () =>
       queryUser({
         consumeGroup: id,
@@ -62,20 +60,6 @@ const ConsumeGroupDetail: React.FC = () => {
       },
     }
   );
-
-  const onValuesChange = (p: any) => {
-    updateFormValues(d => {
-      Object.assign(d, p);
-    });
-  };
-  const onSearch = () => {
-    run(formValues);
-  };
-
-  const onReset = () => {
-    form.resetFields();
-    run({});
-  };
 
   return (
     <Spin spinning={loading}>

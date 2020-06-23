@@ -1,10 +1,10 @@
 /**
  * TABLE COMPONENT WITH SEARCH
  */
-import { Modal, Input, Tooltip } from 'antd';
+import { Modal, Input } from 'antd';
 import * as React from 'react';
 import { ModalProps } from 'antd/lib/modal';
-import { ReactElement, useEffect } from 'react';
+import { ReactElement } from 'react';
 import './index.less';
 
 const { useState } = React;

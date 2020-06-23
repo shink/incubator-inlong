@@ -2,100 +2,48 @@ import React, { useContext, useState } from 'react';
 import GlobalContext from '@/context/globalContext';
 import Breadcrumb from '@/components/Breadcrumb';
 import Table from '@/components/Tablex';
-import Modal, { OKProps } from '@/components/Modalx';
-import {
-  Form,
-  Select,
-  Button,
-  Spin,
-  Switch,
-  Input,
-  Row,
-  Col,
-  message,
-} from 'antd';
+import { Form, Select, Button, Spin, Switch, message} from 'antd';
 import { useImmer } from 'use-immer';
 import { useRequest } from '@/hooks';
 import tableFilterHelper from '@/components/Tablex/tableFilterHelper';
-import { boolean2Chinese } from '@/utils';
+import { boolean2Chinese, transParamsWithConstantsMap } from '@/utils';
+import {BROKER_INFO_ZH_MAP} from '@/constants/broker';
 import './index.less';
+import {Link} from "react-router-dom";
+import CommonModal, {OPTIONS, onOpenModal, BrokerResultData, BrokerData} from './commonModal'
 
-declare type BrokerData = any[];
-interface BrokerResultData {
-  acceptPublish: string;
-  acceptSubscribe: string;
-  brokerId: number;
-  brokerIp: string;
-  brokerPort: number;
-  brokerTLSPort: number;
-  brokerVersion: string;
-  enableTLS: boolean;
-  isAutoForbidden: boolean;
-  isBrokerOnline: string;
-  isConfChanged: string;
-  isConfLoaded: string;
-  isRepAbnormal: boolean;
-  manageStatus: string;
-  runStatus: string;
-  subStatus: string;
-  [key: string]: any;
-}
-
-const { Option } = Select;
-const OPTIONS = [
-  {
-    value: 'online',
-    name: '上线',
-  },
-  {
-    value: 'offline',
-    name: '下线',
-  },
-  {
-    value: 'reload',
-    name: '重载',
-  },
-  {
-    value: 'delete',
-    name: '删除',
-  },
-];
-const OPTIONS_VALUES = OPTIONS.map(t => t.value);
-const queryBroker = (data: BrokerResultData) => ({
-  url: '/api/op_query/admin_query_broker_run_status',
-  data: data,
-});
-
+const {Option} = Select;
 const Broker: React.FC = () => {
   // column config
   const columns = [
     {
-      title: 'BrokerID',
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'brokerId'),
       dataIndex: 'brokerId',
       fixed: 'left',
+      render: (t: Array<any>) => <Link to={'/broker/' + t}>{t}</Link>,
     },
     {
-      title: 'BrokerIP',
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'brokerIp'),
       dataIndex: 'brokerIp',
     },
     {
-      title: 'BrokerPort',
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'brokerPort'),
       dataIndex: 'brokerPort',
     },
     {
-      title: '管理状态',
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'manageStatus'),
       dataIndex: 'manageStatus',
     },
     {
-      title: '运行状态',
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'runStatus'),
       dataIndex: 'runStatus',
     },
     {
-      title: '运行子状态',
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'subStatus'),
       dataIndex: 'subStatus',
     },
     {
-      title: '可发布',
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'acceptPublish'),
       dataIndex: 'acceptPublish',
       render: (t: string, r: BrokerResultData) => {
         return (
@@ -107,7 +55,7 @@ const Broker: React.FC = () => {
       },
     },
     {
-      title: '可订阅',
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'acceptSubscribe'),
       dataIndex: 'acceptSubscribe',
       render: (t: string, r: BrokerResultData) => {
         return (
@@ -119,42 +67,42 @@ const Broker: React.FC = () => {
       },
     },
     {
-      title: '配置变更',
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'isConfChanged'),
       dataIndex: 'isConfChanged',
       render: (t: string) => boolean2Chinese(t),
     },
     {
-      title: '变更加载',
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'isConfLoaded'),
       dataIndex: 'isConfLoaded',
       render: (t: string) => boolean2Chinese(t),
     },
     {
-      title: 'broker注册',
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'isBrokerOnline'),
       dataIndex: 'isBrokerOnline',
       render: (t: string) => boolean2Chinese(t),
     },
     {
-      title: '上线',
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'acceptPublish'),
       dataIndex: 'isBrokerOnline',
       render: (t: string) => boolean2Chinese(t),
     },
     {
-      title: 'TLS端口',
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'brokerTLSPort'),
       dataIndex: 'brokerTLSPort',
       render: (t: string) => boolean2Chinese(t),
     },
     {
-      title: '启用TLS',
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'enableTLS'),
       dataIndex: 'enableTLS',
       render: (t: boolean) => boolean2Chinese(t),
     },
     {
-      title: '上报异常',
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'isRepAbnormal'),
       dataIndex: 'isRepAbnormal',
       render: (t: boolean) => boolean2Chinese(t),
     },
     {
-      title: '自动屏蔽',
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'isAutoForbidden'),
       dataIndex: 'isAutoForbidden',
       render: (t: boolean) => boolean2Chinese(t),
     },
@@ -167,7 +115,7 @@ const Broker: React.FC = () => {
         return (
           <span className="options-wrapper">
             {OPTIONS.map(t => (
-              <a key={t.value} onClick={() => onOptionsChange(t.value, r)}>
+              <a href="#" key={t.value} onClick={() => onOptionsChange(t.value, r)}>
                 {t.name}
               </a>
             ))}
@@ -176,165 +124,27 @@ const Broker: React.FC = () => {
       },
     },
   ];
-  const { breadMap, userInfo } = useContext(GlobalContext);
+  const { breadMap } = useContext(GlobalContext);
   const [modalParams, updateModelParams] = useImmer<any>({});
   const [filterData, updateFilterData] = useImmer<any>({});
   const [selectBroker, setSelectBroker] = useState<any>([]);
   const [brokerList, updateBrokerList] = useImmer<BrokerData>([]);
   const [form] = Form.useForm();
-  const [newBrokerForm] = Form.useForm();
   // init query
-  const { data, loading, run } = useRequest<any, BrokerData>(queryBroker, {
+  const { data, loading, run } = useRequest<any, BrokerData>((data: BrokerResultData) => ({
+    url: '/api/op_query/admin_query_broker_run_status',
+    data: data,
+  }), {
     onSuccess: data => {
       updateBrokerList(d => {
         Object.assign(d, data);
       });
     },
   });
-  // render funcs
-  const renderBrokerOptions = () => {
-    const columns = [
-      {
-        title: 'Broker',
-        render: (t: string, r: BrokerResultData) => {
-          return `${r.brokerId}#${r.brokerIp}:${r.brokerPort}`;
-        },
-      },
-      {
-        title: 'BrokerIP',
-        dataIndex: 'brokerIp',
-      },
-      {
-        title: '管理状态',
-        dataIndex: 'manageStatus',
-      },
-      {
-        title: '运行状态',
-        dataIndex: 'runStatus',
-      },
-      {
-        title: '运行子状态',
-        dataIndex: 'subStatus',
-      },
-      {
-        title: '可发布',
-        render: (t: string) => boolean2Chinese(t),
-      },
-      {
-        title: '可订阅',
-        render: (t: string) => boolean2Chinese(t),
-      },
-    ];
-    const dataSource = data.filter((t: BrokerResultData) =>
-      modalParams.params.includes(t.brokerId)
-    );
-    return (
-      <Table
-        columns={columns}
-        dataSource={dataSource}
-        rowKey="brokerId"
-      ></Table>
-    );
-  };
-  const renderNewBroker = () => {
-    const brokerFormArr = [
-      {
-        name: 'brokerId',
-        defaultValue: '0',
-      },
-      {
-        name: 'numPartitions',
-        defaultValue: '3',
-      },
-      {
-        name: 'brokerIP',
-        defaultValue: '',
-      },
-      {
-        name: 'brokerPort',
-        defaultValue: '8123',
-      },
-      {
-        name: 'deleteWhen',
-        defaultValue: '0 0 6,18 * * ?',
-      },
-      {
-        name: 'deletePolicy',
-        defaultValue: 'delete,168h',
-      },
-      {
-        name: 'unflushThreshold',
-        defaultValue: '1000',
-      },
-      {
-        name: 'unflushInterval',
-        defaultValue: '10000',
-      },
-      {
-        name: 'acceptPublish',
-        defaultValue: 'true',
-      },
-      {
-        name: 'acceptSubscribe',
-        defaultValue: 'true',
-      },
-    ];
 
-    return (
-      <Form form={newBrokerForm}>
-        <Row gutter={24}>
-          {brokerFormArr.map((t, index) => (
-            <Col span={12} key={'brokerFormArr' + index}>
-              <Form.Item
-                labelCol={{ span: 12 }}
-                label={t.name}
-                name={t.name}
-                initialValue={t.defaultValue}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-          ))}
-        </Row>
-      </Form>
-    );
-  };
-  const renderBrokerStateChange = () => {
-    const { params } = modalParams;
-
-    return (
-      <div>
-        请确认<span className="enhance">{params.option}</span> ID:{' '}
-        <span className="enhance">{params.id}</span> 的 Broker?
-      </div>
-    );
-  };
-
-  // events
-  const onOpenModal = (type: string, title: string, params?: any) => {
-    updateModelParams(m => {
-      m.type = type;
-      m.params = params;
-      Object.assign(m, {
-        params,
-        visible: type,
-        title,
-        onOk: (p: OKProps) => onModelOk(type, p),
-        onCancel: () =>
-          updateModelParams(m => {
-            m.visible = false;
-          }),
-      });
-    });
-  };
   // table event
+  // acceptSubscribe && acceptPublish options
   const onSwitchChange = (e: boolean, r: BrokerResultData, type: string) => {
-    const index = data.findIndex(
-      (t: BrokerResultData) => t.brokerId === r.brokerId
-    );
-    updateBrokerList(d => {
-      d[index][type] = e + '';
-    });
     let option = '';
     if (type === 'acceptPublish') {
       option = e ? '发布' : '禁止发布';
@@ -342,66 +152,50 @@ const Broker: React.FC = () => {
       option = e ? '订阅' : '禁止订阅';
     }
 
-    onOpenModal('brokerStateChange', `请确认操作`, { option, id: r.brokerId });
+    onOpenModal({
+      type: 'brokerStateChange',
+      title: `请确认操作`,
+      updateFunction: updateModelParams,
+      params: {
+        option,
+        id: r.brokerId,
+        type,
+        callback: () => {
+          const index = data.findIndex(
+            (t: BrokerResultData) => t.brokerId === r.brokerId
+          );
+          updateBrokerList(d => {
+            d[index][type] = e + '';
+          });
+        }},
+    });
   };
-  const onBrokerTableSelectChange = (p: any[], rows: any[]) => {
-    setSelectBroker(p);
+  // new broker
+  const onNewBroker = () => {
+    onOpenModal({type: 'newBroker', title: '新建Broker', updateFunction: updateModelParams})
   };
-
-  // modal event
+  // online, offline, etc.
   const onOptionsChange = (type: string, r?: BrokerResultData) => {
     if (!r && !selectBroker.length) {
       form.resetFields();
       return message.error('批量操作至少选择一列！');
     }
-    onOpenModal(
+
+    onOpenModal({
       type,
-      `确认进行【${OPTIONS.find(t => t.value === type)?.name}】操作？`,
-      [r?.brokerId]
-    );
-  };
-  const onModelOk = (type: string, p: OKProps) => {
-    switch (type) {
-      case 'newBroker':
-        return newBroker(p);
-      default:
-        return brokerOptions(type, p);
-    }
-  };
-
-  const newBrokerQuery = useRequest<any, any>(
-    data => ({ url: '/api/op_modify/admin_add_broker_configure', ...data }),
-    { manual: true }
-  );
-  const newBroker = (p: OKProps) => {
-    const values = newBrokerForm.getFieldsValue();
-    newBrokerQuery.run({
-      data: {
-        ...values,
-        confModAuthToken: p.psw,
-        createUser: userInfo.userName,
-      },
+      title: `确认进行【${OPTIONS.find(t => t.value === type)?.name}】操作？`,
+      updateFunction: updateModelParams,
+      params: r ? [r.brokerId] : selectBroker,
     });
   };
-
-  const brokerOptionsQuery = useRequest<any, any>(
-    (url, data) => ({ url, ...data }),
-    { manual: true }
-  );
-  const brokerOptions = (type: string, p: OKProps) => {
-    const { params } = p;
-    brokerOptionsQuery.run(`/api/op_modify/admin_${type}_broker_configure`, {
-      data: {
-        brokerId: params ? params?.join(',') : selectBroker.join(','),
-        confModAuthToken: p.psw,
-        createUser: userInfo.userName,
-      },
-    });
+  // table select
+  const onBrokerTableSelectChange = (p: any[]) => {
+    setSelectBroker(p);
   };
 
   return (
     <Spin spinning={loading}>
-      <Breadcrumb breadcrumbMap={breadMap}></Breadcrumb>
+      <Breadcrumb breadcrumbMap={breadMap} />
       <div className="main-container">
         <div
           className="search-wrapper"
@@ -424,7 +218,7 @@ const Broker: React.FC = () => {
             <Form.Item>
               <Button
                 type="primary"
-                onClick={() => onOpenModal('newBroker', '新建Broker')}
+                onClick={() => onNewBroker()}
                 style={{ margin: '0 10px 0 10px' }}
               >
                 新增
@@ -463,18 +257,9 @@ const Broker: React.FC = () => {
               ],
             })
           }
-        ></Table>
+        />
       </div>
-      <Modal {...modalParams}>
-        <div>
-          {modalParams.type &&
-            OPTIONS_VALUES.includes(modalParams.type) &&
-            renderBrokerOptions()}
-          {modalParams.type === 'newBroker' && renderNewBroker()}
-          {modalParams.type === 'brokerStateChange' &&
-            renderBrokerStateChange()}
-        </div>
-      </Modal>
+      <CommonModal modalParams={modalParams} data={data} />
     </Spin>
   );
 };

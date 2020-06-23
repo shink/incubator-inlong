@@ -1,0 +1,18 @@
+export const BROKER_INFO_ZH_MAP = {
+  acceptPublish: '可发布',
+  acceptSubscribe: '可订阅',
+  brokerId: 'BrokerId',
+  brokerIp: 'BrokerIP',
+  brokerPort: 'BrokerPort',
+  brokerTLSPort: 'TLS端口',
+  brokerVersion: "版本",
+  enableTLS: '启用TLS',
+  isAutoForbidden: '自动屏蔽',
+  isBrokerOnline: 'broker注册',
+  isConfChanged: '配置变更',
+  isConfLoaded: '变更加载',
+  isRepAbnormal: '上报异常',
+  manageStatus: '管理状态',
+  runStatus: '运行状态',
+  subStatus: '运行子状态',
+};
