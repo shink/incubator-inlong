@@ -25,7 +25,7 @@ declare type TopicQueryData = {
 
 const {TabPane} = Tabs;
 
-const BrokerDetail: React.FC = () => {
+const Detail: React.FC = () => {
   const { id } = useParams();
   const { breadMap } = useContext(GlobalContext);
   const [form] = Form.useForm();
@@ -198,9 +198,9 @@ const BrokerDetail: React.FC = () => {
   const onSwitchChange = (e: boolean, type: string) => {
     let option = '';
     if (type === 'acceptPublish') {
-      option = e ? '发布' : '禁止发布';
+      option = e ? '发布' : '禁止可发布';
     } else if (type === 'acceptSubscribe') {
-      option = e ? '订阅' : '禁止订阅';
+      option = e ? '订阅' : '禁止可订阅';
     }
 
     onOpenModal({
@@ -302,4 +302,4 @@ const BrokerDetail: React.FC = () => {
   );
 };
 
-export default BrokerDetail;
+export default Detail;

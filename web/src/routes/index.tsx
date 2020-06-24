@@ -11,19 +11,19 @@ const routes: RouteProps[] = [
   },
   {
     path: '/broker/:id',
-    component: () => import('@/pages/Broker/brokerDetail'),
+    component: () => import('@/pages/Broker/detail'),
   },
   {
     path: '/broker',
     component: () => import('@/pages/Broker'),
   },
+  // {
+  //   path: '/topic/:id',
+  //   component: () => import('@/pages/Topic/detail'),
+  // },
   {
-    path: '/user',
-    component: () => import('@/pages/Other/User'),
-  },
-  {
-    path: '/simple',
-    component: () => import('@/pages/Other/Simple'),
+    path: '/topic',
+    component: () => import('@/pages/Topic'),
   },
   {
     component: () => import('@/pages/NotFound'),

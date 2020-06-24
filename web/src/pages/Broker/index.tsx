@@ -115,7 +115,7 @@ const Broker: React.FC = () => {
         return (
           <span className="options-wrapper">
             {OPTIONS.map(t => (
-              <a href="#" key={t.value} onClick={() => onOptionsChange(t.value, r)}>
+              <a key={t.value} onClick={() => onOptionsChange(t.value, r)}>
                 {t.name}
               </a>
             ))}
@@ -147,9 +147,9 @@ const Broker: React.FC = () => {
   const onSwitchChange = (e: boolean, r: BrokerResultData, type: string) => {
     let option = '';
     if (type === 'acceptPublish') {
-      option = e ? '发布' : '禁止发布';
+      option = e ? '发布' : '禁止可发布';
     } else if (type === 'acceptSubscribe') {
-      option = e ? '订阅' : '禁止订阅';
+      option = e ? '订阅' : '禁止可订阅';
     }
 
     onOpenModal({
