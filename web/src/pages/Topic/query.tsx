@@ -12,6 +12,7 @@ interface ComProps {
 }
 
 let newObjectTemp: string = '';
+let editObjectTemp: string = '';
 const Comp = (props: ComProps) => {
   const {fire} = props;
   const { userInfo } = useContext(GlobalContext);
@@ -33,6 +34,9 @@ const Comp = (props: ComProps) => {
       case 'editTopic':
         promise = editTopic(p);
         break;
+      case 'endEditChooseBroker':
+        promise = endEditChooseBroker(p);
+        break;
       case 'topicStateChange':
         promise = topicStateChange(type, p);
         break;
@@ -42,6 +46,9 @@ const Comp = (props: ComProps) => {
       case 'deleteTopic':
         promise = deleteTopic(type, p);
         break;
+      case 'deleteConsumeGroup':
+        promise = deleteConsumeGroup(type, p);
+        break;
     }
 
     promise && promise.then(t => {
@@ -49,7 +56,10 @@ const Comp = (props: ComProps) => {
       if(t.statusCode !== 0 && callback) callback(t);
     })
   };
-
+  const commonQuery = useRequest<any, any>(
+    (url, data) => ({ url, ...data }),
+    { manual: true }
+  );
   const newTopicQuery = useRequest<any, any>(
     data => ({ url: '/api/op_query/admin_query_broker_topic_config_info', ...data }),
     { manual: true }
@@ -80,28 +90,31 @@ const Comp = (props: ComProps) => {
     });
   };
 
-  const updateTopicQuery = useRequest<any, any>(
-    data => ({ url: '/api/op_modify/admin_update_broker_configure', ...data }),
-    { manual: true }
-  );
   const editTopic = (p: OKProps) => {
     const {params} = p;
-    return updateTopicQuery.run({
+    editObjectTemp = JSON.stringify(p.params);
+    return newTopicQuery.run({
       data: {
-        ...params,
-        confModAuthToken: p.psw,
-        createUser: userInfo.userName,
+        topicName: params.topicName,
+        brokerId: '',
       },
     });
   };
+  const endEditChooseBroker = (p: OKProps) => {
+    const topicParams = JSON.parse(editObjectTemp);
+    const {params} = p;
+    return commonQuery.run(`/api/op_modify/admin_modify_topic_info`, {
+      data: {
+        borkerId: params.selectBroker.join(','),
+        confModAuthToken: p.psw,
+        ...topicParams
+      },
+    })
+  };
 
-  const deleteTopicQuery = useRequest<any, any>(
-    (url, data) => ({ url, ...data }),
-    { manual: true }
-  );
   const deleteTopic = (type: string, p: OKProps) => {
     const { params } = p;
-    return deleteTopicQuery.run(`/api/op_modify/admin_delete_topic_info`, {
+    return commonQuery.run(`/api/op_modify/admin_delete_topic_info`, {
       data: {
         brokerId: params.selectBroker.join(','),
         confModAuthToken: p.psw,
@@ -110,11 +123,16 @@ const Comp = (props: ComProps) => {
       },
     });
   };
-
-  const topicStateChangeQuery = useRequest<any, any>(
-    (url, data) => ({ url, ...data }),
-    { manual: true }
-  );
+  const deleteConsumeGroup = (type: string, p: OKProps) => {
+    const { params } = p;
+    return commonQuery.run(`/api/op_modify/admin_delete_allowed_consumer_group_info`, {
+      data: {
+        groupName: params.groupName,
+        confModAuthToken: p.psw,
+        topicName: params.topicName
+      },
+    });
+  };
   const topicStateChange = (type: string, p: OKProps) => {
     const { params } = p;
     let data: {
@@ -134,15 +152,11 @@ const Comp = (props: ComProps) => {
       data.acceptSubscribe = params.value;
     }
 
-    return topicStateChangeQuery.run(`/api/op_modify/admin_modify_topic_info`, {
+    return commonQuery.run(`/api/op_modify/admin_modify_topic_info`, {
       data,
     });
   };
 
-  const authorizeControlQuery = useRequest<any, any>(
-    (url, data) => ({ url, ...data }),
-    { manual: true }
-  );
   const authorizeControl = (type: string, p: OKProps) => {
     const { params } = p;
     let data: {
@@ -156,7 +170,7 @@ const Comp = (props: ComProps) => {
       modifyUser: userInfo.userName,
     }
 
-    return authorizeControlQuery.run(`/api/op_modify/admin_set_topic_authorize_control`, {
+    return commonQuery.run(`/api/op_modify/admin_set_topic_authorize_control`, {
       data,
     });
   };

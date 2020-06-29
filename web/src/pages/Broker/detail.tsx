@@ -237,7 +237,7 @@ const Detail: React.FC = () => {
     <Spin spinning={queryBrokerConf.loading && queryTopicInfo.loading}>
       <Breadcrumb
         breadcrumbMap={breadMap}
-        appendParams={`Broker（${id}）`}
+        appendParams={`Broker（${id}）详情`}
       />
       <div className="main-container">
         <TitleWrap title="运行状态" wrapperStyle={{position: 'relative'}}>

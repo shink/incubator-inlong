@@ -227,6 +227,7 @@ export const onOpenModal = (p: BrokerModalProps) => {
       onCancel: () =>
         updateFunction((m: any) => {
           m.visible = false;
+          m.isOk = null;
         }),
     });
   });
@@ -253,7 +254,7 @@ const Comp = (props: ComProps) => {
         {modalParams.type === 'editBroker' && renderEditBroker(modalParams, form)}
         {modalParams.type === 'brokerStateChange' && renderBrokerStateChange(modalParams)}
       </div>
-      <Query fire={modalParams.isOk} params={modalParams.okParams} type={modalParams.type} />
+      <Query fire={modalParams.isOk} params={modalParams.okParams} type={modalParams.query || modalParams.type} />
     </Modal>
   )
 };

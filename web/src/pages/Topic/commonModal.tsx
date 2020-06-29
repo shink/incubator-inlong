@@ -145,20 +145,20 @@ const renderChooseBroker = (modalParams: any) => {
     },
     {
       title: '实例数',
-      dataIndex: 'runInfo.totalTopicStoreNum',
+      dataIndex: ['runInfo', 'numTopicStores'],
     },
     {
       title: '当前运行状态',
-      dataIndex: 'runInfo.brokerManageStatus',
+      dataIndex: ['runInfo', 'brokerManageStatus'],
     },
     {
       title: '可发布',
-      dataIndex: 'runInfo.acceptPublish',
+      dataIndex: ['runInfo', 'acceptPublish'],
       render: (t: string) => boolean2Chinese(t),
     },
     {
       title: '可订阅',
-      dataIndex: 'runInfo.acceptSubscribe',
+      dataIndex: ['runInfo', 'acceptSubscribe'],
       render: (t: string) => boolean2Chinese(t),
     },
   ];
@@ -176,7 +176,7 @@ const renderChooseBroker = (modalParams: any) => {
 };
 const renderEditTopic = (modalParams: any, form: FormProps['form']) => {
   const {params: p} = modalParams;
-  const pickArr = ['numPartitions', 'unflushThreshold', 'unflushInterval', 'deleteWhen', 'deletePolicy', 'acceptPublish', 'acceptSubscribe'];
+  const pickArr = ['topicName', 'numPartitions', 'unflushThreshold', 'unflushInterval', 'deleteWhen', 'deletePolicy', 'acceptPublish', 'acceptSubscribe'];
   let brokerFormArr : Array<{
     name: string;
     defaultValue: string;
@@ -229,6 +229,16 @@ const renderDeleteTopic = (modalParams: any) => {
     </div>
   );
 };
+const renderDeleteConsumeGroup = (modalParams: any) => {
+  const { params } = modalParams;
+
+  return (
+    <div>
+      确认<span className="enhance">删除</span> 以下 :
+      <span className="enhance">（{params.groupName}）</span> 吗?
+    </div>
+  );
+};
 const renderAuthorizeControlChange = (modalParams: any) => {
   const { params } = modalParams;
 
@@ -251,7 +261,7 @@ export const onOpenModal = (p: TopicModalProps) => {
         updateFunction((m: any) => {
           if(type === 'newTopic' || type === 'editTopic') {
             p.params = Object.assign(f && f.getFieldsValue(), {
-              callback: p.params.callback
+              callback: p.params.callback,
             });
           }
 
@@ -263,7 +273,7 @@ export const onOpenModal = (p: TopicModalProps) => {
 
             // end
             if(type === 'chooseBroker') {
-              m.query = 'endChooseBroker';
+              m.query = p.params.subType === 'edit' ? 'endEditChooseBroker' : 'endChooseBroker';
             }
             p.params = Object.assign({}, p.params, {
               selectBroker
@@ -277,6 +287,7 @@ export const onOpenModal = (p: TopicModalProps) => {
       onCancel: () =>
         updateFunction((m: any) => {
           m.visible = false;
+          m.isOk = null;
         }),
     });
   });
@@ -301,6 +312,7 @@ const Comp = (props: ComProps) => {
         {modalParams.type === 'editTopic' && renderEditTopic(modalParams, form)}
         {modalParams.type === 'topicStateChange' && renderTopicStateChange(modalParams)}
         {modalParams.type === 'deleteTopic' && renderDeleteTopic(modalParams)}
+        {modalParams.type === 'deleteConsumeGroup' && renderDeleteConsumeGroup(modalParams)}
         {modalParams.type === 'authorizeControl' && renderAuthorizeControlChange(modalParams)}
       </div>
      <Query fire={modalParams.isOk} params={modalParams.okParams} type={modalParams.visible && (modalParams.query || modalParams.type)} />

@@ -15,4 +15,8 @@ export const BROKER_INFO_ZH_MAP = {
   manageStatus: '管理状态',
   runStatus: '运行状态',
   subStatus: '运行子状态',
+  'runInfo.acceptPublish': 'broker可发布状态',
+  'runInfo.acceptSubscribe': 'broker可订阅状态',
+  'runInfo.numPartitions': 'broker分区数',
+  'runInfo.brokerManageStatus': 'broker运行状态'
 };

@@ -17,10 +17,10 @@ const routes: RouteProps[] = [
     path: '/broker',
     component: () => import('@/pages/Broker'),
   },
-  // {
-  //   path: '/topic/:id',
-  //   component: () => import('@/pages/Topic/detail'),
-  // },
+  {
+    path: '/topic/:name',
+    component: () => import('@/pages/Topic/detail'),
+  },
   {
     path: '/topic',
     component: () => import('@/pages/Topic'),

@@ -38,7 +38,7 @@ const BasicLayout: React.FC = props => {
     <>
       <ProBasicLayout
         title="TubeMQ"
-        logo="logo192.png"
+        logo="/logo192.png"
         menuDataRender={() => menuData}
         menuItemRender={(menuItemProps, defaultDom) => {
           if (menuItemProps.isUrl || !menuItemProps.path) {

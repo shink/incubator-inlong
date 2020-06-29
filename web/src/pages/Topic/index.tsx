@@ -148,7 +148,6 @@ const Topic: React.FC = () => {
         value: e,
         topicName: r.topicName,
         callback: () => {
-          debugger
           const index = data.findIndex(
             (t: TopicResultData) => t.topicName === r.topicName
           );
