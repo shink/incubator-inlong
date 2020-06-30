@@ -32,14 +32,18 @@ axios.interceptors.response.use(
       return Promise.reject(data);
     }
 
-    // set object outside data into it
-    const res = Object.assign({}, data);
-    delete res.errCode;
-    delete res.errMsg;
-    res.data = Object.assign(res.data, {
-      ...res,
-    });
-    return res || [];
+    // admin_query_master_group_info interface design no good need handle
+    if (
+      Object.keys(data).includes('groupName') &&
+      Object.keys(data).includes('groupStatus')
+    ) {
+      data.data = {
+        data: data.data,
+        groupName: data.groupName,
+        groupStatus: data.groupStatus,
+      };
+    }
+    return data || [];
   },
   function(error) {
     return Promise.reject(error);
