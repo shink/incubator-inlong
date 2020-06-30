@@ -224,11 +224,12 @@ export const onOpenModal = (p: BrokerModalProps) => {
           m.isOk = Date.now();
         })
       },
-      onCancel: () =>
+      onCancel: () => {
         updateFunction((m: any) => {
           m.visible = false;
           m.isOk = null;
-        }),
+        })
+      }
     });
   });
 };

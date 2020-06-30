@@ -32,7 +32,14 @@ axios.interceptors.response.use(
       return Promise.reject(data);
     }
 
-    return data || [];
+    // set object outside data into it
+    const res = Object.assign({}, data)
+    delete res.errCode;
+    delete res.errMsg;
+    res.data = Object.assign(res.data, {
+      ...res
+    })
+    return res || [];
   },
   function(error) {
     return Promise.reject(error);

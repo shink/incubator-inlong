@@ -26,6 +26,10 @@ const routes: RouteProps[] = [
     component: () => import('@/pages/Topic'),
   },
   {
+    path: '/cluster',
+    component: () => import('@/pages/Cluster'),
+  },
+  {
     component: () => import('@/pages/NotFound'),
   },
 ];

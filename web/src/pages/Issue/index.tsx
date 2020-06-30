@@ -34,7 +34,7 @@ const columns = [
   },
 ];
 
-const queryUser = (data: IssueQueryData) => ({
+const queryIssueList = (data: IssueQueryData) => ({
   url: '/api/op_query/admin_query_sub_info',
   data: data,
 });
@@ -43,7 +43,7 @@ const Issue: React.FC = () => {
   const { breadMap } = useContext(GlobalContext);
   const [form] = Form.useForm();
   const [formValues, updateFormValues] = useImmer<any>({});
-  const { data, loading, run } = useRequest<any, IssueData>(queryUser, {});
+  const { data, loading, run } = useRequest<any, IssueData>(queryIssueList, {});
 
   const onValuesChange = (p: any) => {
     updateFormValues(d => {
