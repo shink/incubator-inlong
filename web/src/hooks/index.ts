@@ -33,12 +33,12 @@ axios.interceptors.response.use(
     }
 
     // set object outside data into it
-    const res = Object.assign({}, data)
+    const res = Object.assign({}, data);
     delete res.errCode;
     delete res.errMsg;
     res.data = Object.assign(res.data, {
-      ...res
-    })
+      ...res,
+    });
     return res || [];
   },
   function(error) {

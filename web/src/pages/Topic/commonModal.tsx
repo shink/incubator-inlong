@@ -1,10 +1,10 @@
-import {boolean2Chinese} from "@/utils";
-import Table from "@/components/Tablex";
-import {Col, Form, Input, message, Row} from "antd";
-import Modal, {OKProps} from "@/components/Modalx";
-import React, {useState} from "react";
-import Query from "@/pages/Topic/query";
-import {FormProps} from "antd/lib/form";
+import { boolean2Chinese } from '@/utils';
+import Table from '@/components/Tablex';
+import { Col, Form, Input, message, Row } from 'antd';
+import Modal, { OKProps } from '@/components/Modalx';
+import React from 'react';
+import Query from '@/pages/Topic/query';
+import { FormProps } from 'antd/lib/form';
 
 export const OPTIONS = [
   {
@@ -17,13 +17,13 @@ export const OPTIONS_VALUES = OPTIONS.map(t => t.value);
 // interface
 export declare type TopicData = any[];
 export interface TopicResultData {
-  topicName: string,
-  infoCount: string,
-  totalCfgNumPart: string,
-  totalRunNumPartCount: string,
-  isSrvAcceptPublish: string|number,
-  isSrvAcceptSubscribe: string|number,
-  enableAuthControl: string|number,
+  topicName: string;
+  infoCount: string;
+  totalCfgNumPart: string;
+  totalRunNumPartCount: string;
+  isSrvAcceptPublish: string | number;
+  isSrvAcceptSubscribe: string | number;
+  enableAuthControl: string | number;
   [key: string]: any;
 }
 export interface TopicModalProps {
@@ -71,13 +71,7 @@ const renderTopicOptions = (modalParams: any, dataSource: any[]) => {
       render: (t: string) => boolean2Chinese(t),
     },
   ];
-  return (
-    <Table
-      columns={columns}
-      dataSource={dataSource}
-      rowKey="brokerId"
-    />
-  );
+  return <Table columns={columns} dataSource={dataSource} rowKey="brokerId" />;
 };
 const renderNewTopic = (form: any) => {
   const brokerFormArr = [
@@ -135,7 +129,7 @@ const renderNewTopic = (form: any) => {
   );
 };
 const renderChooseBroker = (modalParams: any) => {
-  let {params} = modalParams;
+  const { params } = modalParams;
   const columns = [
     {
       title: 'Broker',
@@ -175,18 +169,27 @@ const renderChooseBroker = (modalParams: any) => {
   );
 };
 const renderEditTopic = (modalParams: any, form: FormProps['form']) => {
-  const {params: p} = modalParams;
-  const pickArr = ['topicName', 'numPartitions', 'unflushThreshold', 'unflushInterval', 'deleteWhen', 'deletePolicy', 'acceptPublish', 'acceptSubscribe'];
-  let brokerFormArr : Array<{
+  const { params: p } = modalParams;
+  const pickArr = [
+    'topicName',
+    'numPartitions',
+    'unflushThreshold',
+    'unflushInterval',
+    'deleteWhen',
+    'deletePolicy',
+    'acceptPublish',
+    'acceptSubscribe',
+  ];
+  const brokerFormArr: Array<{
     name: string;
     defaultValue: string;
   }> = [];
   pickArr.forEach(t => {
     brokerFormArr.push({
       name: t,
-      defaultValue: p[t]
-    })
-  })
+      defaultValue: p[t],
+    });
+  });
 
   return (
     <Form form={form}>
@@ -212,8 +215,8 @@ const renderTopicStateChange = (modalParams: any) => {
 
   return (
     <div>
-      请确认<span className="enhance">{params.option}</span> 以下broker列表的 topic :
-      <span className="enhance">（{params.topicName}）</span> 的 Topic?
+      请确认<span className="enhance">{params.option}</span> 以下broker列表的
+      topic :<span className="enhance">（{params.topicName}）</span> 的 Topic?
       {renderChooseBroker(modalParams)}
     </div>
   );
@@ -244,12 +247,17 @@ const renderAuthorizeControlChange = (modalParams: any) => {
 
   return (
     <div>
-      请确认<span className="enhance">{params.value ? '启动' : '关闭'}topic<span className="enhance">（{params.topicName}）</span>的消费组授权控制</span>吗？
+      请确认
+      <span className="enhance">
+        {params.value ? '启动' : '关闭'}topic
+        <span className="enhance">（{params.topicName}）</span>的消费组授权控制
+      </span>
+      吗？
     </div>
   );
 };
 export const onOpenModal = (p: TopicModalProps) => {
-  const {type, title, updateFunction, params} = p;
+  const { type, title, updateFunction, params } = p;
   updateFunction((m: any) => {
     m.type = type;
     m.params = params;
@@ -259,30 +267,37 @@ export const onOpenModal = (p: TopicModalProps) => {
       title,
       onOk: (p: OKProps) => {
         updateFunction((m: any) => {
-          if(type === 'newTopic' || type === 'editTopic') {
+          if (type === 'newTopic' || type === 'editTopic') {
             p.params = Object.assign(f && f.getFieldsValue(), {
               callback: p.params.callback,
             });
           }
 
-          if(type === 'chooseBroker' || type === 'topicStateChange' || type === 'deleteTopic') {
-            if(!selectBroker.length) {
+          if (
+            type === 'chooseBroker' ||
+            type === 'topicStateChange' ||
+            type === 'deleteTopic'
+          ) {
+            if (!selectBroker.length) {
               message.error('至少选择一列！');
               return;
             }
 
             // end
-            if(type === 'chooseBroker') {
-              m.query = p.params.subType === 'edit' ? 'endEditChooseBroker' : 'endChooseBroker';
+            if (type === 'chooseBroker') {
+              m.query =
+                p.params.subType === 'edit'
+                  ? 'endEditChooseBroker'
+                  : 'endChooseBroker';
             }
             p.params = Object.assign({}, p.params, {
-              selectBroker
-            })
+              selectBroker,
+            });
           }
 
           m.okParams = p;
           m.isOk = Date.now();
-        })
+        });
       },
       onCancel: () =>
         updateFunction((m: any) => {
@@ -296,7 +311,7 @@ export const onOpenModal = (p: TopicModalProps) => {
 let selectBroker: any[] = [];
 let f: FormProps['form'];
 const Comp = (props: ComProps) => {
-  const {modalParams, data} = props;
+  const { modalParams, data } = props;
   const [form] = Form.useForm();
   f = form;
 
@@ -304,20 +319,31 @@ const Comp = (props: ComProps) => {
     <Modal {...modalParams}>
       <div>
         {modalParams.type &&
-        OPTIONS_VALUES.includes(modalParams.type) && renderTopicOptions(modalParams, data.filter((t: TopicResultData) =>
-          modalParams.params.includes(t.brokerId)
-        ))}
+          OPTIONS_VALUES.includes(modalParams.type) &&
+          renderTopicOptions(
+            modalParams,
+            data.filter((t: TopicResultData) =>
+              modalParams.params.includes(t.brokerId)
+            )
+          )}
         {modalParams.type === 'newTopic' && renderNewTopic(form)}
         {modalParams.type === 'chooseBroker' && renderChooseBroker(modalParams)}
         {modalParams.type === 'editTopic' && renderEditTopic(modalParams, form)}
-        {modalParams.type === 'topicStateChange' && renderTopicStateChange(modalParams)}
+        {modalParams.type === 'topicStateChange' &&
+          renderTopicStateChange(modalParams)}
         {modalParams.type === 'deleteTopic' && renderDeleteTopic(modalParams)}
-        {modalParams.type === 'deleteConsumeGroup' && renderDeleteConsumeGroup(modalParams)}
-        {modalParams.type === 'authorizeControl' && renderAuthorizeControlChange(modalParams)}
+        {modalParams.type === 'deleteConsumeGroup' &&
+          renderDeleteConsumeGroup(modalParams)}
+        {modalParams.type === 'authorizeControl' &&
+          renderAuthorizeControlChange(modalParams)}
       </div>
-     <Query fire={modalParams.isOk} params={modalParams.okParams} type={modalParams.visible && (modalParams.query || modalParams.type)} />
+      <Query
+        fire={modalParams.isOk}
+        params={modalParams.okParams}
+        type={modalParams.visible && (modalParams.query || modalParams.type)}
+      />
     </Modal>
-  )
+  );
 };
 
 export default Comp;

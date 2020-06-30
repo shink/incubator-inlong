@@ -2,38 +2,48 @@ import React, { useContext } from 'react';
 import GlobalContext from '@/context/globalContext';
 import Breadcrumb from '@/components/Breadcrumb';
 import Table from '@/components/Tablex';
-import { Form, Button, Spin, Switch} from 'antd';
+import { Form, Button, Spin, Switch } from 'antd';
 import { useImmer } from 'use-immer';
 import { useRequest } from '@/hooks';
 import tableFilterHelper from '@/components/Tablex/tableFilterHelper';
-import { boolean2Chinese, transParamsWithConstantsMap } from '@/utils';
-import {TOPIC_INFO_ZH_MAP} from '@/constants/topic';
+import { transParamsWithConstantsMap } from '@/utils';
+import { TOPIC_INFO_ZH_MAP } from '@/constants/topic';
 import './index.less';
-import {Link} from "react-router-dom";
-import CommonModal, {OPTIONS, onOpenModal, TopicResultData, TopicData} from './commonModal'
+import { Link } from 'react-router-dom';
+import CommonModal, {
+  onOpenModal,
+  TopicResultData,
+  TopicData,
+} from './commonModal';
 
 const Topic: React.FC = () => {
   // column config
   const columns = [
     {
-      title: transParamsWithConstantsMap(TOPIC_INFO_ZH_MAP,'topicName'),
+      title: transParamsWithConstantsMap(TOPIC_INFO_ZH_MAP, 'topicName'),
       dataIndex: 'topicName',
       render: (t: Array<any>) => <Link to={'/topic/' + t}>{t}</Link>,
     },
     {
-      title: transParamsWithConstantsMap(TOPIC_INFO_ZH_MAP,'infoCount'),
+      title: transParamsWithConstantsMap(TOPIC_INFO_ZH_MAP, 'infoCount'),
       dataIndex: 'infoCount',
     },
     {
-      title: transParamsWithConstantsMap(TOPIC_INFO_ZH_MAP,'totalCfgNumPart'),
+      title: transParamsWithConstantsMap(TOPIC_INFO_ZH_MAP, 'totalCfgNumPart'),
       dataIndex: 'totalCfgNumPart',
     },
     {
-      title: transParamsWithConstantsMap(TOPIC_INFO_ZH_MAP,'totalRunNumPartCount'),
+      title: transParamsWithConstantsMap(
+        TOPIC_INFO_ZH_MAP,
+        'totalRunNumPartCount'
+      ),
       dataIndex: 'totalRunNumPartCount',
     },
     {
-      title: transParamsWithConstantsMap(TOPIC_INFO_ZH_MAP,'isSrvAcceptPublish'),
+      title: transParamsWithConstantsMap(
+        TOPIC_INFO_ZH_MAP,
+        'isSrvAcceptPublish'
+      ),
       dataIndex: 'isSrvAcceptPublish',
       render: (t: boolean, r: TopicResultData) => {
         return (
@@ -45,7 +55,10 @@ const Topic: React.FC = () => {
       },
     },
     {
-      title: transParamsWithConstantsMap(TOPIC_INFO_ZH_MAP,'isSrvAcceptSubscribe'),
+      title: transParamsWithConstantsMap(
+        TOPIC_INFO_ZH_MAP,
+        'isSrvAcceptSubscribe'
+      ),
       dataIndex: 'isSrvAcceptSubscribe',
       render: (t: boolean, r: TopicResultData) => {
         return (
@@ -57,7 +70,10 @@ const Topic: React.FC = () => {
       },
     },
     {
-      title: transParamsWithConstantsMap(TOPIC_INFO_ZH_MAP,'enableAuthControl'),
+      title: transParamsWithConstantsMap(
+        TOPIC_INFO_ZH_MAP,
+        'enableAuthControl'
+      ),
       dataIndex: 'authData.enableAuthControl',
       render: (t: boolean, r: TopicResultData) => {
         return (
@@ -72,9 +88,9 @@ const Topic: React.FC = () => {
       title: '操作',
       dataIndex: 'topicIp',
       render: (t: string, r: any) => {
-        return <a onClick={() => onDelete(r)}>删除</a>
-      }
-    }
+        return <a onClick={() => onDelete(r)}>删除</a>;
+      },
+    },
   ];
   const { breadMap } = useContext(GlobalContext);
   const [modalParams, updateModelParams] = useImmer<any>({});
@@ -82,17 +98,20 @@ const Topic: React.FC = () => {
   const [topicList, updateTopicList] = useImmer<TopicData>([]);
   const [form] = Form.useForm();
   // init query
-  const { data, loading, run } = useRequest<any, TopicData>((data: TopicResultData) => ({
-    url: '/api/op_query/admin_query_topic_info',
-    data: data,
-  }), {
-    cacheKey: 'topicList',
-    onSuccess: data => {
-      updateTopicList(d => {
-        Object.assign(d, data);
-      });
-    },
-  });
+  const { data, loading, run } = useRequest<any, TopicData>(
+    (data: TopicResultData) => ({
+      url: '/api/op_query/admin_query_topic_info',
+      data: data,
+    }),
+    {
+      cacheKey: 'topicList',
+      onSuccess: data => {
+        updateTopicList(d => {
+          Object.assign(d, data);
+        });
+      },
+    }
+  );
 
   // table event
   // acceptSubscribe && acceptPublish options
@@ -108,33 +127,35 @@ const Topic: React.FC = () => {
       option = e ? '订阅' : '禁止可订阅';
     }
 
-    queryBrokerListByTopicNameQuery.run({
-      data: {
-        topicName: r.topicName,
-        brokerId: ''
-      },
-    }).then((d: TopicResultData) => {
-      onOpenModal({
-        type: 'topicStateChange',
-        title: `请确认操作`,
-        updateFunction: updateModelParams,
-        params: {
-          option,
-          value: e,
+    queryBrokerListByTopicNameQuery
+      .run({
+        data: {
           topicName: r.topicName,
-          data: d[0].topicInfo,
-          type,
-          callback: () => {
-            const index = data.findIndex(
-              (t: TopicResultData) => t.topicName === r.topicName
-            );
-            updateTopicList(d => {
-              d[index][type] = e + '';
-            });
-          }
+          brokerId: '',
         },
+      })
+      .then((d: TopicResultData) => {
+        onOpenModal({
+          type: 'topicStateChange',
+          title: `请确认操作`,
+          updateFunction: updateModelParams,
+          params: {
+            option,
+            value: e,
+            topicName: r.topicName,
+            data: d[0].topicInfo,
+            type,
+            callback: () => {
+              const index = data.findIndex(
+                (t: TopicResultData) => t.topicName === r.topicName
+              );
+              updateTopicList(d => {
+                d[index][type] = e + '';
+              });
+            },
+          },
+        });
       });
-    });
   };
   // author
   const onAuthorizeControl = (e: boolean, r: TopicResultData) => {
@@ -154,45 +175,56 @@ const Topic: React.FC = () => {
           updateTopicList(d => {
             d[index]['authData']['enableAuthControl'] = e + '';
           });
-        }
+        },
       },
     });
-  }
+  };
   // new topic
   const onNewTopic = () => {
     onOpenModal({
-      type: 'newTopic', title: '新建Topic', updateFunction: updateModelParams, params: {
+      type: 'newTopic',
+      title: '新建Topic',
+      updateFunction: updateModelParams,
+      params: {
         callback: (d: any) => {
           onOpenModal({
-            type: 'chooseBroker', title: '选择【新增】broker列表', updateFunction: updateModelParams, params: {
+            type: 'chooseBroker',
+            title: '选择【新增】broker列表',
+            updateFunction: updateModelParams,
+            params: {
               data: d,
               callback: () => {
-                onOpenModal({type: 'close', updateFunction: updateModelParams})
+                onOpenModal({
+                  type: 'close',
+                  updateFunction: updateModelParams,
+                });
               },
-            }
+            },
           });
-        }
-      }
-    })
+        },
+      },
+    });
   };
   // delete
   const onDelete = (r: TopicResultData) => {
-    queryBrokerListByTopicNameQuery.run({
-      data: {
-        topicName: r.topicName,
-        brokerId: ''
-      },
-    }).then((d: TopicResultData) => {
-      onOpenModal({
-        type: 'deleteTopic',
-        title: `请确认操作`,
-        updateFunction: updateModelParams,
-        params: {
+    queryBrokerListByTopicNameQuery
+      .run({
+        data: {
           topicName: r.topicName,
-          data: d[0].topicInfo,
+          brokerId: '',
         },
+      })
+      .then((d: TopicResultData) => {
+        onOpenModal({
+          type: 'deleteTopic',
+          title: `请确认操作`,
+          updateFunction: updateModelParams,
+          params: {
+            topicName: r.topicName,
+            data: d[0].topicInfo,
+          },
+        });
       });
-    });
   };
 
   return (
@@ -234,9 +266,7 @@ const Topic: React.FC = () => {
                 updateFilterData(filterData => {
                   filterData.list = res;
                 }),
-              filterList: [
-                'topicName',
-              ],
+              filterList: ['topicName'],
             })
           }
         />

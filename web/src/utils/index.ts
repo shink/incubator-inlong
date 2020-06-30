@@ -1,7 +1,7 @@
 import { isObject, isEmpty } from 'lodash';
 
 export const isDevelopEnv = () => {
-  return process.env.NODE_ENV === 'development'
+  return process.env.NODE_ENV === 'development';
 };
 
 export const isEmptyParam = (value: any): boolean => {
@@ -37,6 +37,9 @@ export const boolean2Chinese = (value: boolean | string): string => {
   return !v ? '否' : '是';
 };
 
-export const transParamsWithConstantsMap = (map: any, paramsName: string): string => {
+export const transParamsWithConstantsMap = (
+  map: any,
+  paramsName: string
+): string => {
   return map[paramsName] || paramsName;
-}
+};

@@ -2,48 +2,53 @@ import React, { useContext, useState } from 'react';
 import GlobalContext from '@/context/globalContext';
 import Breadcrumb from '@/components/Breadcrumb';
 import Table from '@/components/Tablex';
-import { Form, Select, Button, Spin, Switch, message} from 'antd';
+import { Form, Select, Button, Spin, Switch, message } from 'antd';
 import { useImmer } from 'use-immer';
 import { useRequest } from '@/hooks';
 import tableFilterHelper from '@/components/Tablex/tableFilterHelper';
 import { boolean2Chinese, transParamsWithConstantsMap } from '@/utils';
-import {BROKER_INFO_ZH_MAP} from '@/constants/broker';
+import { BROKER_INFO_ZH_MAP } from '@/constants/broker';
 import './index.less';
-import {Link} from "react-router-dom";
-import CommonModal, {OPTIONS, onOpenModal, BrokerResultData, BrokerData} from './commonModal'
+import { Link } from 'react-router-dom';
+import CommonModal, {
+  OPTIONS,
+  onOpenModal,
+  BrokerResultData,
+  BrokerData,
+} from './commonModal';
 
-const {Option} = Select;
+const { Option } = Select;
 const Broker: React.FC = () => {
   // column config
   const columns = [
     {
-      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'brokerId'),
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP, 'brokerId'),
       dataIndex: 'brokerId',
       fixed: 'left',
       render: (t: Array<any>) => <Link to={'/broker/' + t}>{t}</Link>,
     },
     {
-      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'brokerIp'),
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP, 'brokerIp'),
       dataIndex: 'brokerIp',
     },
     {
-      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'brokerPort'),
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP, 'brokerPort'),
       dataIndex: 'brokerPort',
     },
     {
-      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'manageStatus'),
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP, 'manageStatus'),
       dataIndex: 'manageStatus',
     },
     {
-      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'runStatus'),
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP, 'runStatus'),
       dataIndex: 'runStatus',
     },
     {
-      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'subStatus'),
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP, 'subStatus'),
       dataIndex: 'subStatus',
     },
     {
-      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'acceptPublish'),
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP, 'acceptPublish'),
       dataIndex: 'acceptPublish',
       render: (t: string, r: BrokerResultData) => {
         return (
@@ -55,7 +60,7 @@ const Broker: React.FC = () => {
       },
     },
     {
-      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'acceptSubscribe'),
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP, 'acceptSubscribe'),
       dataIndex: 'acceptSubscribe',
       render: (t: string, r: BrokerResultData) => {
         return (
@@ -67,42 +72,42 @@ const Broker: React.FC = () => {
       },
     },
     {
-      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'isConfChanged'),
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP, 'isConfChanged'),
       dataIndex: 'isConfChanged',
       render: (t: string) => boolean2Chinese(t),
     },
     {
-      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'isConfLoaded'),
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP, 'isConfLoaded'),
       dataIndex: 'isConfLoaded',
       render: (t: string) => boolean2Chinese(t),
     },
     {
-      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'isBrokerOnline'),
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP, 'isBrokerOnline'),
       dataIndex: 'isBrokerOnline',
       render: (t: string) => boolean2Chinese(t),
     },
     {
-      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'acceptPublish'),
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP, 'acceptPublish'),
       dataIndex: 'isBrokerOnline',
       render: (t: string) => boolean2Chinese(t),
     },
     {
-      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'brokerTLSPort'),
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP, 'brokerTLSPort'),
       dataIndex: 'brokerTLSPort',
       render: (t: string) => boolean2Chinese(t),
     },
     {
-      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'enableTLS'),
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP, 'enableTLS'),
       dataIndex: 'enableTLS',
       render: (t: boolean) => boolean2Chinese(t),
     },
     {
-      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'isRepAbnormal'),
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP, 'isRepAbnormal'),
       dataIndex: 'isRepAbnormal',
       render: (t: boolean) => boolean2Chinese(t),
     },
     {
-      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP,'isAutoForbidden'),
+      title: transParamsWithConstantsMap(BROKER_INFO_ZH_MAP, 'isAutoForbidden'),
       dataIndex: 'isAutoForbidden',
       render: (t: boolean) => boolean2Chinese(t),
     },
@@ -131,16 +136,19 @@ const Broker: React.FC = () => {
   const [brokerList, updateBrokerList] = useImmer<BrokerData>([]);
   const [form] = Form.useForm();
   // init query
-  const { data, loading, run } = useRequest<any, BrokerData>((data: BrokerResultData) => ({
-    url: '/api/op_query/admin_query_broker_run_status',
-    data: data,
-  }), {
-    onSuccess: data => {
-      updateBrokerList(d => {
-        Object.assign(d, data);
-      });
-    },
-  });
+  const { data, loading, run } = useRequest<any, BrokerData>(
+    (data: BrokerResultData) => ({
+      url: '/api/op_query/admin_query_broker_run_status',
+      data: data,
+    }),
+    {
+      onSuccess: data => {
+        updateBrokerList(d => {
+          Object.assign(d, data);
+        });
+      },
+    }
+  );
 
   // table event
   // acceptSubscribe && acceptPublish options
@@ -167,12 +175,17 @@ const Broker: React.FC = () => {
           updateBrokerList(d => {
             d[index][type] = e + '';
           });
-        }},
+        },
+      },
     });
   };
   // new broker
   const onNewBroker = () => {
-    onOpenModal({type: 'newBroker', title: '新建Broker', updateFunction: updateModelParams})
+    onOpenModal({
+      type: 'newBroker',
+      title: '新建Broker',
+      updateFunction: updateModelParams,
+    });
   };
   // online, offline, etc.
   const onOptionsChange = (type: string, r?: BrokerResultData) => {

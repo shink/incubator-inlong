@@ -35,7 +35,7 @@ const Comp = (props: ComProps) => {
     isTruePagination,
     showSearch = true,
     searchWidth = 8,
-    searchStyle = {}
+    searchStyle = {},
   } = props;
   const [filterKey, setFilterKey] = useState(defaultSearchKey);
   // 自动增加排序
@@ -86,7 +86,7 @@ const Comp = (props: ComProps) => {
   return (
     <>
       {showSearch && filterFnX && (
-        <Row gutter={20} className="mb10" style={{position: 'relative'}}>
+        <Row gutter={20} className="mb10" style={{ position: 'relative' }}>
           <Col span={searchWidth} style={{ padding: 0, ...searchStyle }}>
             <Tooltip title={filterKey}>
               <Search

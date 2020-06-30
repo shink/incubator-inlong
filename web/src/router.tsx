@@ -14,6 +14,7 @@ import GlobalContext from '@/context/globalContext';
 const App = () => {
   const [cluster, setCluster] = useState();
   const [breadMap, setBreadMap] = useState();
+  // eslint-disable-next-line
   const [userInfo, setUserInfo] = useState({
     userName: 'webapi',
   });

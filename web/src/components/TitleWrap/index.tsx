@@ -9,7 +9,7 @@ interface ComProps {
 }
 
 const Comp = (props: ComProps) => {
-  const {hasSplit = true} = props;
+  const { hasSplit = true } = props;
 
   return (
     <div style={props.wrapperStyle} className={hasSplit ? 'split-border' : ''}>

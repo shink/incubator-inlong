@@ -5,7 +5,7 @@ export const BROKER_INFO_ZH_MAP = {
   brokerIp: 'BrokerIP',
   brokerPort: 'BrokerPort',
   brokerTLSPort: 'TLS端口',
-  brokerVersion: "版本",
+  brokerVersion: '版本',
   enableTLS: '启用TLS',
   isAutoForbidden: '自动屏蔽',
   isBrokerOnline: 'broker注册',
@@ -18,5 +18,5 @@ export const BROKER_INFO_ZH_MAP = {
   'runInfo.acceptPublish': 'broker可发布状态',
   'runInfo.acceptSubscribe': 'broker可订阅状态',
   'runInfo.numPartitions': 'broker分区数',
-  'runInfo.brokerManageStatus': 'broker运行状态'
+  'runInfo.brokerManageStatus': 'broker运行状态',
 };

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import './index.less';
-import {OKProps} from "@/components/Modalx";
-import {useRequest} from "@/hooks";
-import {useContext, useEffect} from "react";
-import GlobalContext from "@/context/globalContext";
+import { OKProps } from '@/components/Modalx';
+import { useRequest } from '@/hooks';
+import { useContext, useEffect } from 'react';
+import GlobalContext from '@/context/globalContext';
 
 interface ComProps {
   fire: string;
@@ -12,15 +12,16 @@ interface ComProps {
 }
 
 const Comp = (props: ComProps) => {
-  const {fire} = props;
+  const { fire } = props;
   const { userInfo } = useContext(GlobalContext);
+  // eslint-disable-next-line
   useEffect(() => {
-    const {params, type} = props;
+    const { params, type } = props;
     dispatchAction(type, params);
   }, [fire, props]);
 
   const dispatchAction = (type: string, p: OKProps) => {
-    if(!fire) return null;
+    if (!fire) return null;
     let promise;
     switch (type) {
       case 'newBroker':
@@ -40,10 +41,11 @@ const Comp = (props: ComProps) => {
         break;
     }
 
-    promise && promise.then(t => {
-      const {callback} = p.params;
-      if(t.statusCode !== 0 && callback) callback(t);
-    })
+    promise &&
+      promise.then(t => {
+        const { callback } = p.params;
+        if (t.statusCode !== 0 && callback) callback(t);
+      });
   };
 
   const newBrokerQuery = useRequest<any, any>(
@@ -51,7 +53,7 @@ const Comp = (props: ComProps) => {
     { manual: true }
   );
   const newBroker = (p: OKProps) => {
-    const {params} = p;
+    const { params } = p;
     return newBrokerQuery.run({
       data: {
         ...params,
@@ -66,7 +68,7 @@ const Comp = (props: ComProps) => {
     { manual: true }
   );
   const editBroker = (p: OKProps) => {
-    const {params} = p;
+    const { params } = p;
     return updateBrokerQuery.run({
       data: {
         ...params,
@@ -82,13 +84,16 @@ const Comp = (props: ComProps) => {
   );
   const brokerOptions = (type: string, p: OKProps) => {
     const { params } = p;
-    return brokerOptionsQuery.run(`/api/op_modify/admin_${type}_broker_configure`, {
-      data: {
-        brokerId: params ? params?.join(',') : params?.selectBroker.join(','),
-        confModAuthToken: p.psw,
-        createUser: userInfo.userName,
-      },
-    });
+    return brokerOptionsQuery.run(
+      `/api/op_modify/admin_${type}_broker_configure`,
+      {
+        data: {
+          brokerId: params ? params?.join(',') : params?.selectBroker.join(','),
+          confModAuthToken: p.psw,
+          createUser: userInfo.userName,
+        },
+      }
+    );
   };
 
   const brokerAcceptPublishQuery = useRequest<any, any>(
@@ -97,30 +102,27 @@ const Comp = (props: ComProps) => {
   );
   const brokerAcceptPublish = (type: string, p: OKProps) => {
     const { params } = p;
-    let data: {
-      [key: string]: any;
-    };
-
-    data = {
+    const data: any = {
       brokerId: params.id,
       confModAuthToken: p.psw,
       createUser: userInfo.userName,
-    }
-    if(params.type === 'acceptPublish') {
+    };
+    if (params.type === 'acceptPublish') {
       data.isAcceptPublish = params.option;
     }
-    if(params.type === 'acceptSubscribe') {
+    if (params.type === 'acceptSubscribe') {
       data.isAcceptSubscribe = params.option;
     }
 
-    return brokerAcceptPublishQuery.run(`/api/op_modify/admin_set_broker_read_or_write`, {
-      data,
-    });
+    return brokerAcceptPublishQuery.run(
+      `/api/op_modify/admin_set_broker_read_or_write`,
+      {
+        data,
+      }
+    );
   };
 
-  return (
-    <></>
-  );
+  return <></>;
 };
 
 export default Comp;

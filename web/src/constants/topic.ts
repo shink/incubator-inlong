@@ -5,6 +5,6 @@ export const TOPIC_INFO_ZH_MAP = {
   totalRunNumPartCount: '运行分区数',
   isSrvAcceptPublish: '可发布',
   isSrvAcceptSubscribe: '可订阅',
-  enableAuthControl: "权限受控",
-  groupCount: '授权消费组'
+  enableAuthControl: '权限受控',
+  groupCount: '授权消费组',
 };

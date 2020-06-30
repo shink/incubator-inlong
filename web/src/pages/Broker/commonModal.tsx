@@ -1,10 +1,10 @@
-import {boolean2Chinese} from "@/utils";
-import Table from "@/components/Tablex";
-import {Col, Form, Input, Row} from "antd";
-import Modal, {OKProps} from "@/components/Modalx";
-import React from "react";
-import Query from "@/pages/Broker/query";
-import {FormProps} from "antd/lib/form";
+import { boolean2Chinese } from '@/utils';
+import Table from '@/components/Tablex';
+import { Col, Form, Input, Row } from 'antd';
+import Modal, { OKProps } from '@/components/Modalx';
+import React from 'react';
+import Query from '@/pages/Broker/query';
+import { FormProps } from 'antd/lib/form';
 
 export const OPTIONS = [
   {
@@ -25,7 +25,6 @@ export const OPTIONS = [
   },
 ];
 export const OPTIONS_VALUES = OPTIONS.map(t => t.value);
-
 
 // interface
 export declare type BrokerData = any[];
@@ -89,13 +88,7 @@ const renderBrokerOptions = (modalParams: any, dataSource: any[]) => {
       render: (t: string) => boolean2Chinese(t),
     },
   ];
-  return (
-    <Table
-      columns={columns}
-      dataSource={dataSource}
-      rowKey="brokerId"
-    />
-  );
+  return <Table columns={columns} dataSource={dataSource} rowKey="brokerId" />;
 };
 const renderNewBroker = (form: any) => {
   const brokerFormArr = [
@@ -161,18 +154,26 @@ const renderNewBroker = (form: any) => {
   );
 };
 const renderEditBroker = (modalParams: any, form: FormProps['form']) => {
-  const {params: p} = modalParams;
-  const pickArr = ['numPartitions', 'unflushThreshold', 'unflushInterval', 'deleteWhen', 'deletePolicy', 'acceptPublish', 'acceptSubscribe'];
-  let brokerFormArr : Array<{
+  const { params: p } = modalParams;
+  const pickArr = [
+    'numPartitions',
+    'unflushThreshold',
+    'unflushInterval',
+    'deleteWhen',
+    'deletePolicy',
+    'acceptPublish',
+    'acceptSubscribe',
+  ];
+  const brokerFormArr: Array<{
     name: string;
     defaultValue: string;
   }> = [];
   pickArr.forEach(t => {
     brokerFormArr.push({
       name: t,
-      defaultValue: p[t]
-    })
-  })
+      defaultValue: p[t],
+    });
+  });
 
   return (
     <Form form={form}>
@@ -204,8 +205,8 @@ const renderBrokerStateChange = (modalParams: any) => {
   );
 };
 export const onOpenModal = (p: BrokerModalProps) => {
-  const {type, title, updateFunction, params} = p;
-  if(typeof params === 'function') {
+  const { type, title, updateFunction, params } = p;
+  if (typeof params === 'function') {
     p.params = params();
   }
   updateFunction((m: any) => {
@@ -217,19 +218,19 @@ export const onOpenModal = (p: BrokerModalProps) => {
       title,
       onOk: (p: OKProps) => {
         updateFunction((m: any) => {
-          if(type === 'newBroker' || type === 'editBroker') {
-            p.params = f && f.getFieldsValue()
+          if (type === 'newBroker' || type === 'editBroker') {
+            p.params = f && f.getFieldsValue();
           }
           m.okParams = p;
           m.isOk = Date.now();
-        })
+        });
       },
       onCancel: () => {
         updateFunction((m: any) => {
           m.visible = false;
           m.isOk = null;
-        })
-      }
+        });
+      },
     });
   });
 };
@@ -240,7 +241,7 @@ interface ComProps {
 }
 let f: FormProps['form'];
 const Comp = (props: ComProps) => {
-  const {modalParams, data} = props;
+  const { modalParams, data } = props;
   const [form] = Form.useForm();
   f = form;
 
@@ -248,16 +249,26 @@ const Comp = (props: ComProps) => {
     <Modal {...modalParams}>
       <div>
         {modalParams.type &&
-        OPTIONS_VALUES.includes(modalParams.type) && renderBrokerOptions(modalParams, data.filter((t: BrokerResultData) =>
-          modalParams.params.includes(t.brokerId)
-        ))}
+          OPTIONS_VALUES.includes(modalParams.type) &&
+          renderBrokerOptions(
+            modalParams,
+            data.filter((t: BrokerResultData) =>
+              modalParams.params.includes(t.brokerId)
+            )
+          )}
         {modalParams.type === 'newBroker' && renderNewBroker(form)}
-        {modalParams.type === 'editBroker' && renderEditBroker(modalParams, form)}
-        {modalParams.type === 'brokerStateChange' && renderBrokerStateChange(modalParams)}
+        {modalParams.type === 'editBroker' &&
+          renderEditBroker(modalParams, form)}
+        {modalParams.type === 'brokerStateChange' &&
+          renderBrokerStateChange(modalParams)}
       </div>
-      <Query fire={modalParams.isOk} params={modalParams.okParams} type={modalParams.query || modalParams.type} />
+      <Query
+        fire={modalParams.isOk}
+        params={modalParams.okParams}
+        type={modalParams.query || modalParams.type}
+      />
     </Modal>
-  )
+  );
 };
 
 export default Comp;
