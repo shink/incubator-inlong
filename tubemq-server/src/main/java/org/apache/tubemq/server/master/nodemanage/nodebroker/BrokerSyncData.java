@@ -34,7 +34,6 @@ import org.apache.tubemq.corebase.utils.CheckSum;
 import org.apache.tubemq.corebase.utils.TStringUtils;
 import org.apache.tubemq.corebase.utils.Tuple2;
 import org.apache.tubemq.corebase.utils.Tuple4;
-import org.apache.tubemq.server.common.TServerConstants;
 import org.apache.tubemq.server.common.statusdef.ManageStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +46,7 @@ public class BrokerSyncData {
     // current data push id
     private long dataPushId;
     // data need to sync
-    private AtomicLong syncDownDataConfId =
+    private final AtomicLong syncDownDataConfId =
             new AtomicLong(System.currentTimeMillis());
     private int syncDownDataChkSumId;
     private ManageStatus mngStatus;
@@ -61,18 +60,12 @@ public class BrokerSyncData {
     private int syncUpDataChkSumId = TBaseConstants.META_VALUE_UNDEFINED;
     private String syncUpBrokerConfInfo;
     private List<String> syncUpTopicConfInfos = new ArrayList<>();
+    Map<String, TopicInfo> syncUpTopicInfoMap = new HashMap<>();
     private long lastDataUpTime = 0;
+
 
     public BrokerSyncData() {
 
-    }
-
-    public BrokerSyncData(long dataPushId,
-                          ManageStatus mngStatus,
-                          String brokerConfInfo,
-                          Map<String, String> topicConfInfoMap) {
-        updBrokerSyncData(true, dataPushId,
-                mngStatus, brokerConfInfo, topicConfInfoMap);
     }
 
     /**
@@ -123,6 +116,7 @@ public class BrokerSyncData {
 
     /**
      * Book the report data by broker
+     * @param brokerInfo      broker info
      * @param syncDataConfId   data configure id
      * @param syncDataChkSumId data check-sum id
      * @param isTakeData  if carry the data info
@@ -131,7 +125,8 @@ public class BrokerSyncData {
      *
      * @return whether the broker data synchronized
      */
-    public boolean bookBrokerReportInfo(long syncDataConfId, int syncDataChkSumId,
+    public boolean bookBrokerReportInfo(BrokerInfo brokerInfo,
+                                        long syncDataConfId, int syncDataChkSumId,
                                         boolean isTakeData, String syncBrokerConfInfo,
                                         List<String> syncTopicConfInfos) {
         this.syncUpDataConfId = syncDataConfId;
@@ -142,6 +137,12 @@ public class BrokerSyncData {
                 this.syncUpTopicConfInfos = new ArrayList<>();
             } else {
                 this.syncUpTopicConfInfos = syncTopicConfInfos;
+            }
+            Map<String, TopicInfo> tmpInfoMap = parseTopicInfoConf(brokerInfo);
+            if (tmpInfoMap == null) {
+                this.syncUpTopicInfoMap.clear();
+            } else {
+                this.syncUpTopicInfoMap = tmpInfoMap;
             }
             this.lastDataUpTime = System.currentTimeMillis();
         }
@@ -185,15 +186,12 @@ public class BrokerSyncData {
 
     /**
      * Get the broker publish info
-     * @param brokerInfo broker info
      * @return need sync data
      *         f0 : manage status
      *         f1 : topic configure
      */
-    public Tuple2<ManageStatus, Map<String, TopicInfo>> getBrokerPublishInfo(
-            final BrokerInfo brokerInfo) {
-        Map<String, TopicInfo> topicInfoMap = parseTopicInfoConf(brokerInfo);
-        return new Tuple2<>(mngStatus, topicInfoMap);
+    public Tuple2<ManageStatus, Map<String, TopicInfo>> getBrokerPublishInfo() {
+        return new Tuple2<>(mngStatus, syncUpTopicInfoMap);
     }
 
     public long getDataPushId() {
@@ -231,6 +229,7 @@ public class BrokerSyncData {
                 .append(",\"syncUpDataChkSumId\":").append(syncUpDataChkSumId)
                 .append(",\"syncUpBrokerConfInfo\":\"").append(syncUpBrokerConfInfo)
                 .append("\",\"syncUpTopicConfInfos\":\"").append(syncUpTopicConfInfos.toString())
+                .append("\",\"syncUpTopicInfoMap\":\"").append(syncUpTopicInfoMap.toString())
                 .append("\",\"lastDataUpTime\":").append(lastDataUpTime)
                 .append("}");
         return sBuffer;
@@ -256,12 +255,6 @@ public class BrokerSyncData {
         if (brokerConfInfoAttrs.length > 7) {
             if (!TStringUtils.isBlank(brokerConfInfoAttrs[7])) {
                 numTopicStores = Integer.parseInt(brokerConfInfoAttrs[7]);
-            }
-        }
-        int unFlushDataHold = TServerConstants.CFG_DEFAULT_DATA_UNFLUSH_HOLD;
-        if (brokerConfInfoAttrs.length > 8) {
-            if (!TStringUtils.isBlank(brokerConfInfoAttrs[8])) {
-                unFlushDataHold = Integer.parseInt(brokerConfInfoAttrs[8]);
             }
         }
         Map<String, TopicInfo> topicInfoMap = new HashMap<>();

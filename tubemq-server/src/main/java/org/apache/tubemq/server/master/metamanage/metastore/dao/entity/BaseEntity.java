@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.apache.tubemq.corebase.TBaseConstants;
 import org.apache.tubemq.corebase.utils.TStringUtils;
 import org.apache.tubemq.server.common.TServerConstants;
+import org.apache.tubemq.server.common.utils.SerialIdUtils;
 import org.apache.tubemq.server.common.utils.WebParameterUtils;
 
 
@@ -176,15 +177,7 @@ public class BaseEntity implements Serializable, Cloneable {
     }
 
     protected void updSerialId() {
-        long curSerialId;
-        long newSerialId;
-        do {
-            curSerialId = this.serialId.get();
-            newSerialId = System.currentTimeMillis();
-            if (newSerialId == curSerialId) {
-                newSerialId++;
-            }
-        } while (!this.serialId.compareAndSet(curSerialId, newSerialId));
+        SerialIdUtils.updTimeStampSerialIdValue(this.serialId);
     }
 
     public String getModifyUser() {
