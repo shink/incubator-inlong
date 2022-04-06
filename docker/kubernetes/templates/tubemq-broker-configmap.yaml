@@ -64,7 +64,7 @@ data:
       MASTER_LIST="$master:8715,"$MASTER_LIST
     done
     # generate config file
-    cp /opt/tubemq-server/conf/broker.ini.raw /opt/tubemq-server/conf/broker.ini
+    cp /opt/tubemq-server/conf/{{ .Values.tubemqBroker.component }}.ini.raw /opt/tubemq-server/conf/broker.ini
     sed -i "s/REPLACE_BY_POD_ID/$MY_POD_ID/g" /opt/tubemq-server/conf/broker.ini
     sed -i "s/REPLACE_BY_POD_HOSTNAME/$HOST/g" /opt/tubemq-server/conf/broker.ini
     sed -i "s/REPLACE_BY_MASTER_LIST/${MASTER_LIST%?}/g" /opt/tubemq-server/conf/broker.ini

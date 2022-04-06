@@ -144,7 +144,7 @@ spec:
               mountPath: /config-scripts
             - name: {{ .Values.tubemqBroker.component }}-ini
               mountPath: /opt/tubemq-server/conf/{{ .Values.tubemqBroker.component }}.ini.raw
-              subPath: {{ .Values.tubemqBroker.component }}.ini.raw
+              subPath: broker.ini.raw
               readOnly: false
       volumes:
         - name: config
