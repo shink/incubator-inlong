@@ -45,14 +45,3 @@ data:
     zkConnectionTimeoutMs=30000
     zkSyncTimeMs=5000
     zkCommitPeriodMs=5000
-
-    [meta_bdb]
-    metaDataPath=var/meta_data
-    repGroupName={{ template "inlong.fullname" . }}-{{ .Values.tubemqMaster.component }}-group
-    repNodeName={{ template "inlong.fullname" . }}-{{ .Values.tubemqMaster.component }}-REPLACE_BY_POD_ID
-    repNodePort={{ .Values.tubemqMaster.ports.helpPort }}
-    repHelperHost={{ template "inlong.tubemqMaster.hostname" . }}:{{ .Values.tubemqMaster.ports.helpPort }}
-    metaLocalSyncPolicy=1
-    metaReplicaSyncPolicy=3
-    repReplicaAckPolicy=1
-    repStatusCheckTimeoutMs=10000

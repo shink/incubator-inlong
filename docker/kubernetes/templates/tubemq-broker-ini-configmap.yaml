@@ -37,7 +37,7 @@ data:
     loadMessageStoresInParallel=true
     consumerRegTimeoutMs=35000
 
-    [meta_zookeeper]
+    [zookeeper]
     zkNodeRoot=/tubemq
     zkServerAddr={{ template "inlong.zookeeper.hostname" . }}:{{ .Values.zookeeper.ports.client }}
     zkSessionTimeoutMs=30000
