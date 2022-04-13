@@ -23,7 +23,7 @@ metadata:
   labels:
     component: {{ .Values.tubemqMaster.component }}
 data:
-  master.ini.raw: |
+  master.ini.raw: |-
     [master]
     hostName=REPLACE_BY_POD_HOSTNAME
     port={{ .Values.tubemqMaster.ports.rpcPort }}

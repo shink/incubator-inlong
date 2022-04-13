@@ -23,15 +23,15 @@ metadata:
   labels:
     component: {{ .Values.zookeeper.component }}
 data:
-  ok: |
+  ok: |-
     #!/bin/sh
     zkServer.sh status
 
-  ready: |
+  ready: |-
     #!/bin/sh
     echo ruok | nc 127.0.0.1 ${1:-2181}
 
-  run: |
+  run: |-
     #!/bin/bash
     set -a
     HOST=$(hostname)

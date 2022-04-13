@@ -23,15 +23,15 @@ metadata:
   labels:
     component: {{ .Values.tubemqMaster.component }}
 data:
-  ok: |
+  ok: |-
     #!/bin/sh
     /opt/tubemq-server/bin/tubemq.sh master status
 
-  ready: |
+  ready: |-
     #!/bin/sh
-    curl 127.0.0.1:8080/index.htm
+    curl 127.0.0.1:{{ .Values.tubemqMaster.ports.webPort }}/index.htm
 
-  run: |
+  run: |-
     #!/bin/bash
     set -a
     # get pod index
