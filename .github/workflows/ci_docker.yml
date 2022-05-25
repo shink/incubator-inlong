@@ -100,7 +100,13 @@ jobs:
 
       - name: Check running containers
         if: ${{ success() }}
+        working-directory: docker/docker-compose
         run: docker ps -a
+
+      - name: Stop and remove containers
+        if: ${{ success() }}
+        working-directory: docker/docker-compose
+        run: docker-compose stop && docker-compose rm
 
       # If the changes are being pushed to the master branch or a branch like 'release-1.0.0', this step will output true.
       - name: Match branch
