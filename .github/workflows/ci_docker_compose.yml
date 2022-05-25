@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-name: InLong Docker Build and Push
+name: InLong Docker Compose
 
 on:
   push:
@@ -92,15 +92,6 @@ jobs:
         run: mvn --batch-mode --update-snapshots -e -V clean package -DskipTests -Pdocker
         env:
           CI: false
-
-      - name: Build the docker-compose stack
-        if: {{ always() }}
-        working-directory: docker/docker-compose
-        run: docker-compose up -d
-
-      - name: Check running containers
-        if: {{ success() }}
-        run: docker ps -a
 
       # If the changes are being pushed to the master branch or a branch like 'release-1.0.0', this step will output true.
       - name: Match branch
