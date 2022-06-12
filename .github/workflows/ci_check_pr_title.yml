@@ -54,6 +54,7 @@ jobs:
           echo "## Second! :bug:" >> $GITHUB_STEP_SUMMARY
           echo "### Third! :green_heart:" >> $GITHUB_STEP_SUMMARY
           echo "#### Fourth! :red_heart:" >> $GITHUB_STEP_SUMMARY
+          echo "Word" >> $GITHUB_STEP_SUMMARY
 
   tmp:
     name: Temp test
@@ -69,3 +70,4 @@ jobs:
           echo "## Bug! :bug:" >> $GITHUB_STEP_SUMMARY
           echo "### Hello world! :green_heart:" >> $GITHUB_STEP_SUMMARY
           echo "#### Hello world! :red_heart:" >> $GITHUB_STEP_SUMMARY
+          echo "Word" >> $GITHUB_STEP_SUMMARY
