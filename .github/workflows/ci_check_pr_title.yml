@@ -18,6 +18,7 @@
 name: InLong Check Pull Request Title
 
 on:
+  push:
   pull_request_target:
     types:
       - opened
@@ -36,6 +37,7 @@ jobs:
       # The correct title should start with [WIP] or [INLONG-xxx],
       # where xxx is the issue number, e.g. [INLONG-123].
       - name: Check title
+        if: ${{ github.event_name == 'pull_request_target' }}
         run: |
           if [[ ! "$PR_TITLE" =~ ^\[(WIP|INLONG-[0-9]+)\].*$ ]]; then
             echo "This pull request title is not valid."
@@ -44,3 +46,26 @@ jobs:
           fi
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
+
+      - name: Summary
+        run: |
+          echo "# First! :tada:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Second! :bug:" >> $GITHUB_STEP_SUMMARY
+          echo "### Third! :green_heart:" >> $GITHUB_STEP_SUMMARY
+          echo "#### Fourth! :red_heart:" >> $GITHUB_STEP_SUMMARY
+
+  tmp:
+    name: Temp test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Summary
+        run: |
+          echo "# Hello world! :tada:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Bug! :bug:" >> $GITHUB_STEP_SUMMARY
+          echo "### Hello world! :green_heart:" >> $GITHUB_STEP_SUMMARY
+          echo "#### Hello world! :red_heart:" >> $GITHUB_STEP_SUMMARY
