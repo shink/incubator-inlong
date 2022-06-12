@@ -49,12 +49,14 @@ jobs:
 
       - name: Summary
         run: |
-          echo "# First! :tada:" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## Second! :bug:" >> $GITHUB_STEP_SUMMARY
-          echo "### Third! :green_heart:" >> $GITHUB_STEP_SUMMARY
-          echo "#### Fourth! :red_heart:" >> $GITHUB_STEP_SUMMARY
-          echo "Word" >> $GITHUB_STEP_SUMMARY
+          echo "This pull request title is not valid."
+          echo "The correct title should start with [WIP] or [INLONG-xxx], where xxx is the issue number, e.g. [INLONG-123]."
+          
+          # add a job summary
+          echo "## This pull request title is not valid! :bug:" >> $GITHUB_STEP_SUMMARY
+          echo "The correct title should start with `[WIP]` or `[INLONG-xxx]`, where **xxx** is the issue number, e.g. `[INLONG-123]`." >> $GITHUB_STEP_SUMMARY
+          
+          exit 1
 
   tmp:
     name: Temp test
