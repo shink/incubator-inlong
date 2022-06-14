@@ -28,6 +28,13 @@ jobs:
     name: Check license header
     runs-on: ubuntu-latest
     steps:
+      - run: |
+          echo "${{ github.workflow }}"
+          echo "${{ github.event.pull_request.number }}"
+          echo "${{ github.ref }}"
+          echo "${{ github.run_id }}"
+          echo "${{ github.event.pull_request.number || github.ref || github.run_id }}"
+
       - name: Checkout
         uses: actions/checkout@v3
 
