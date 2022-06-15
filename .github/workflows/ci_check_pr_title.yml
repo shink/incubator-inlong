@@ -18,6 +18,7 @@
 name: InLong Check Pull Request Title
 
 on:
+  push:
   pull_request_target:
     types:
       - opened
